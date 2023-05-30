@@ -1,28 +1,19 @@
-<script>
-    import { auth, authToken } from "../../service/store";
-    import { goto } from '$app/navigation'
-    import { onMount } from 'svelte';
-
-    const onLogout = () => {
-        authToken.logout();
-        goto('/login');
-    }
-
-    onMount(() => {
-        auth.isLogin();
-    });
-</script>
-
-<header>
-    <div>
-        <h1>헤더 Title</h1>
-        <nav>
-            {#if $auth.email}
-                <button on:click={onLogout}>로그아웃</button>
-            {:else}
-                <a href="/login">로그인</a>
-                <a href="/register">회원가입</a>
-            {/if}
-        </nav>
-    </div>
-</header>
+<div class="container">
+    <nav>
+      <ul>
+        <li><strong>우리팀 잘한다</strong></li>
+      </ul>
+      <ul>
+        <li><a href="/main">로그아웃</a></li>
+        <li><a href="." role="Home">Button</a></li>
+      </ul>
+    </nav>
+  </div>
+  
+  <style>
+  .container {
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid black;
+  }
+  </style>
