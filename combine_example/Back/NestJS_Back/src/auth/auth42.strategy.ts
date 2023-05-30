@@ -20,7 +20,7 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 		// 	clientSecret: configService.get<string>('CLIENT_SECRET'),
 		// 	callbackURL: configService.get<string>('CALLBACK_URL'),
 		// 	profileFields: {
-		// 		'id': 'id',
+		// 		'id': 'id', // Todo: 이거 왜 받았던거?
 		// 		'email': 'email',
 		// 		'nickname': 'login',
 		// 		'avatar': 'image.link'
@@ -56,7 +56,7 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 		const { data } = await axios.get('https://api.intra.42.fr/v2/me', {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
-		
+	
 		const user = this.userRepository.create({
 			id: data.login,
 			nickname: data.login,
@@ -72,6 +72,6 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 
 		console.log(user);
 
-		// cb(null, user); 이거 대체재 뭐임?
+		// cb(null, user); Todo: 이거 대체재 뭐임?
 	}
 }
