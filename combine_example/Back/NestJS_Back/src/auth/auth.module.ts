@@ -12,11 +12,11 @@ import { UsersService } from 'src/users/users.service';
     PassportModule.register({defaultStrategy: '42'}),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AuthController],
   providers: [
     AuthService,
     auth42Strategy,
     UsersService
   ],
+  controllers: [AuthController],
 })
 export class AuthModule {}
