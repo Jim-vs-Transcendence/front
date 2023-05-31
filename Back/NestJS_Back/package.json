@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "@prisma/client": "^4.14.1",
     "https-proxy-agent": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
     "passport-oauth2": "^1.7.0",

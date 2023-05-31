@@ -12,8 +12,7 @@ export class UsersService {
 	) {}
 
 	private token1: tokenDTO = {
-		key: "This is Key!",
-		token: "This is Token!",
+		authToken: "qwer1234",
 	}
 	private token: tokenDTO[] = [
 		this.token1,
