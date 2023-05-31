@@ -5,8 +5,8 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     type: "postgres",
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT, // +를 붙여 int형으로 변환
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
+    username: "root",
+    password: "password",
     database: process.env.DB_DATABASE,
     synchronize: process.env.DB_SYNC === 'true',
     logging: process.env.DB_LOG === 'true',

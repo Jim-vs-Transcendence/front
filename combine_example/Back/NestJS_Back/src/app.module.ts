@@ -19,7 +19,7 @@ import { typeORMConfig } from './configs/typeorm.config';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot((typeORMConfig)),
-    // TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User]),
     UsersModule,
   ],
   controllers: [

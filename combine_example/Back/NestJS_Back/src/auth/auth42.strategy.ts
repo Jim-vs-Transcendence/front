@@ -7,6 +7,7 @@ import { User } from "src/users/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Strategy } from 'passport-oauth2';
+import { AuthService } from "./auth.service";
 
 @Injectable()
 export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
@@ -56,7 +57,7 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 		const { data } = await axios.get('https://api.intra.42.fr/v2/me', {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
-	
+
 		const user = this.userRepository.create({
 			id: data.login,
 			nickname: data.login,
@@ -67,11 +68,11 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 			level: 0,
 			user_status: 0,
 		});
-	
-		await this.userRepository.save(user);
 
-		console.log(user);
+		// await this.userRepository.save(user);
 
-		// cb(null, user); Todo: 이거 대체재 뭐임?
+		// console.log(user);
+
+		// cb(null, user); //Todo: 이거 대체재 뭐임?
 	}
 }
