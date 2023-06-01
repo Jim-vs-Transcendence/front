@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { tokenDTO } from './DTO/token.dto';
 
 @Controller('user')
 @ApiTags('유저 API')
@@ -16,11 +15,6 @@ export class UsersController {
 	@ApiCreatedResponse({ description: '모든 유저를 조회합니다.', type: User })
 	async findAll(): Promise<User[]> {
 		return this.usersService.findAll();
-	}
-
-	@Get('token')
-	async getToken(): Promise<tokenDTO> {
-		return this.usersService.getToken();
 	}
 
 	@Get(':id')

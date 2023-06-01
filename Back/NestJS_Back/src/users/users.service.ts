@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { tokenDTO } from './DTO/token.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,13 +9,6 @@ export class UsersService {
 		@InjectRepository(User)
 		private userRepository: Repository<User>,
 	) {}
-
-	private token1: tokenDTO = {
-		authToken: "qwer1234",
-	}
-	private token: tokenDTO[] = [
-		this.token1,
-	];
 
 	findAll(): Promise<User[]> {
 		return this.userRepository.find();
@@ -42,10 +34,6 @@ export class UsersService {
 	async deleteUser(id: string): Promise<string> {
 		await this.userRepository.delete({id: id});
 		return "Successfully delete!";
-	}
-
-	async getToken(): Promise<tokenDTO> {
-		return this.token1;
 	}
 }
 

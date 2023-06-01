@@ -18,4 +18,8 @@ export class AuthController {
 	async login42(@Req() req: Request, @Res() res: Response) {
 		this.authService.OAuthLogin({req, res});
 	}
+
+	@Get('logout')
+	async logout() {
+	}
 }
