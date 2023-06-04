@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard42 } from './auth42.guard';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -9,17 +9,18 @@ export class AuthController {
 		private readonly authService: AuthService
 	) {}
 
-	@Get('/login/')
+	@Get('login')
 	@UseGuards(AuthGuard42)
 	async login() {}
 
-	@Get('/42/callback/')
+	@Get('42/callback')
 	@UseGuards(AuthGuard42)
 	async login42(@Req() req: Request, @Res() res: Response) {
-		this.authService.OAuthLogin({req, res});
+		this.authService.login({req, res});
 	}
 
 	@Get('logout')
-	async logout() {
+	async logout(@Headers('authtoken') token: string) {
+		this.authService.logout(token);
 	}
 }

@@ -6,6 +6,10 @@ export class TokenService {
 	private jwtMap: Map<string, string> = new Map();
 
 	async createToken(userId: string): Promise<string> {
+		if (await this.jwtMap.get(userId)) {
+			//중복로그인 관련 로직
+		}
+
 		const payload = { id: userId };
         const token = await sign(payload, process.env.JWT_SECRET);
 		this.jwtMap.set(userId, token);
@@ -15,7 +19,7 @@ export class TokenService {
 	async verifyToken(token: string): Promise<boolean | string> {
 		try {
 			const payload = await verify(token, process.env.JWT_SECRET);
-			console.log(payload['id']);
+			console.log(payload);
 			return payload['id'];
 		} catch {
 			return false;
@@ -24,10 +28,6 @@ export class TokenService {
 
 	async getToken(userId: string): Promise<string | undefined> {
 		return await this.jwtMap.get(userId);
-	}
-
-	async getUserId(token: string): Promise<string> {
-		return await this.jwtMap.get(token);
 	}
 
 	async deleteToken(userId: string): Promise <void> {

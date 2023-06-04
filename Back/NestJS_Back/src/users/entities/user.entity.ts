@@ -34,4 +34,8 @@ export class User {
 	@Column()
 	@ApiProperty({ description: '유저 상태 (0: 오프라인, 1: 온라인, 2: 게임중, 3: 채팅중)' })
 	user_status: number;
+
+	@Column()
+	@ApiProperty({ description: 'two-factor 사용 여부 (0: 비활성화, 1: 활성화)' })
+	two_factor: boolean
 }

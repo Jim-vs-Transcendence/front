@@ -24,9 +24,6 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 	}
 
 	async validate(accessToken: string, refreshToken: string, profile: any, cb: any) {
-		// console.log('accessToken: ', accessToken);
-		// console.log('refreshToken: ', refreshToken);
-		// console.log('profile: ', profile);
 		const user: User = {
 			id: profile.nickname,
 			nickname: profile.nickname,
@@ -35,7 +32,8 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 			win: 0,
 			lose: 0,
 			level: 0,
-			user_status: 0
+			user_status: 0,
+			two_factor: false
 		}
 		console.log(user);
 		cb(null, user);
