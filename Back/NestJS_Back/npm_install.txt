@@ -1,2 +1,0 @@
-npm i passport-42 @nestjs/passport @nestjs/config passport prisma @prisma/client @nestjs/typeorm typeorm pg
-npm i ts-node -g

@@ -29,6 +29,8 @@
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
     "@prisma/client": "^4.14.1",
+    "@types/cookie-parser": "^1.4.3",
+    "cookie-parser": "^1.4.6",
     "https-proxy-agent": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "passport": "^0.6.0",

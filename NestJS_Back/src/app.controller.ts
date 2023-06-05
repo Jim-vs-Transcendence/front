@@ -1,4 +1,4 @@
-import { Controller, Get, Redirect } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -9,6 +9,4 @@ export class AppController {
   hello(){
     return 'Hello World!';
   }
-  // @Redirect('http://localhost:8080', 301)
-  // redirect() {}
 }

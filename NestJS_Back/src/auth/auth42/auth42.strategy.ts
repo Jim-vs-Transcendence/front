@@ -35,7 +35,7 @@ export class auth42Strategy extends PassportStrategy( Strategy, '42' ) {
 			user_status: 0,
 			two_factor: false
 		}
-		console.log(user);
+		// console.log(user);
 		cb(null, user);
 	}
 }

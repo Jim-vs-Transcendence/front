@@ -1,0 +1,2 @@
+npm i passport-42 @nestjs/passport @nestjs/config passport prisma @prisma/client @nestjs/typeorm typeorm pg cookie-parser @type/cookie-parser
+npm i ts-node -g

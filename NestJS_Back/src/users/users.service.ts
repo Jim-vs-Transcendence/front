@@ -23,7 +23,6 @@ export class UsersService {
 			id,
 			user
 		);
-		console.log(user);
 		return "Successfully update!";
 	}
 

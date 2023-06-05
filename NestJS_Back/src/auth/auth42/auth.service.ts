@@ -17,15 +17,20 @@ export class AuthService {
 			await this.usersService.saveUser(req.user);
 
 		const token = await this.tokenService.createToken(req.user.id);
-		res.set({"authToken": token});
+		res.setHeader('authToken', token);
+		// res.cookie('authToken', token, {
+		// 	httpOnly: true,
+		// 	secure: true,
+		// 	sameSite: 'none',
+		// });
 
 		user = await this.usersService.findOne(req.user.id);
 		user.user_status = 1;
 
 		await this.usersService.updateUser(user.id, user);
 
-		// res.redirect("http://localhost:5173/auth/" + user.id);
-		res.redirect("http://localhost:5173/main");
+		res.redirect("http://localhost:5173/auth/" + user.id);
+		// res.redirect("http://localhost:5173/main");
 		// res.redirect("http://43.202.12.31:3002/main");
 	}
 
