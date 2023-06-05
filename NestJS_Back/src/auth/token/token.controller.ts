@@ -21,7 +21,6 @@ export class TokenController {
 			return false;
 
 		const test = req.cookies['authToken'];
-		console.log("cookie: " + test);
 		return await this.usersService.findOne(user.toString());
 	}
 

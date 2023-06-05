@@ -26,9 +26,8 @@ export class UsersService {
 		return "Successfully update!";
 	}
 
-	async saveUser(user: User): Promise<string> {
-		await this.userRepository.save(user);
-		return "Successfully save!";
+	async saveUser(user: User): Promise<User> {
+		return await this.userRepository.save(user);
 	}
 
 	async deleteUser(id: string): Promise<string> {

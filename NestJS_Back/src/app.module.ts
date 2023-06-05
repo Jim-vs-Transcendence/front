@@ -13,6 +13,8 @@ import { User } from './users/entities/user.entity';
 import { TokenModule } from './auth/token/token.module';
 import { TokenService } from './auth/token/token.service';
 import { TokenController } from './auth/token/token.controller';
+import { TwoFactorController } from './auth/two-factor/two-factor.controller';
+import { TwoFactorService } from './auth/two-factor/two-factor.service';
 
 @Module({
   imports: [
@@ -40,12 +42,14 @@ import { TokenController } from './auth/token/token.controller';
     AuthController,
     UsersController,
     TokenController,
+    TwoFactorController,
   ],
   providers: [
     AppService,
     AuthService,
     UsersService,
     TokenService,
+    TwoFactorService,
   ],
 })
 export class AppModule {}

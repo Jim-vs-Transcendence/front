@@ -37,5 +37,8 @@ export class User {
 
 	@Column()
 	@ApiProperty({ description: 'two-factor 사용 여부 (0: 비활성화, 1: 활성화)' })
-	two_factor: boolean
+	two_factor: boolean;
+
+	@Column()
+	two_factor_secret: string;
 }

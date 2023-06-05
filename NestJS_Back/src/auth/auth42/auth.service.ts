@@ -14,10 +14,10 @@ export class AuthService {
 		let user = await this.usersService.findOne( req.user.id );
 
 		if (!user)
-			await this.usersService.saveUser(req.user);
+			user = await this.usersService.saveUser(req.user);
 
 		const token = await this.tokenService.createToken(req.user.id);
-		res.setHeader('authToken', token);
+		// res.setHeader('authToken', token);
 		// res.cookie('authToken', token, {
 		// 	httpOnly: true,
 		// 	secure: true,
@@ -34,7 +34,7 @@ export class AuthService {
 		// res.redirect("http://43.202.12.31:3002/main");
 	}
 
-	async logout(token){
+	async logout(token: string){
 		const userId = this.tokenService.verifyToken(token);
 
 		await this.tokenService.deleteToken((await userId).toString());

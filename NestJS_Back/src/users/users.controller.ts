@@ -33,8 +33,8 @@ export class UsersController {
 
 	@Post()
 	@ApiOperation({ summary: '유저 등록 API', description: '유저를 등록합니다.' })
-	@ApiCreatedResponse({ description: '유저를 등록합니다.', type: String })
-	async saveUser(@Body() user: User): Promise<string> {
+	@ApiCreatedResponse({ description: '유저를 등록합니다.', type: User })
+	async saveUser(@Body() user: User): Promise<User> {
 		return this.usersService.saveUser(user);
 	}
 
