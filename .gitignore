@@ -35,4 +35,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 /.env
-/Back/NestJS_Back/.env
+./NestJS_Back/.env
+
