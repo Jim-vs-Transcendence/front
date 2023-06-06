@@ -15,19 +15,9 @@ export class TwoFactorService {
 
 		console.log(secret);
 
-		const tmpUser = {
-			"id": "dhyun",
-			"nickname": "dhyun",
-			"email": "dhyun@student.42seoul.kr",
-			"avatar": "https://cdn.intra.42.fr/users/16be1203bb548bd66ed209191ff6d30d/dhyun.jpg",
-			"win": 0,
-			"lose": 0,
-			"level": 0,
-			"user_status": 1,
-			"two_factor": true,
-			"two_factor_secret": secret
-		}
+		const tmpUser: User = await this.userService.findOne('dhyun');
 
+		tmpUser.two_factor_secret = secret;
 		this.userService.updateUser('dhyun', tmpUser);
 
 		const otpauthUrl = authenticator.keyuri("dhyun",
@@ -41,5 +31,15 @@ export class TwoFactorService {
 
 	async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
 		return toFileStream(stream, otpauthUrl);
+	}
+
+	async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
+		const tmpUser: User = await this.userService.findOne('dhyun');
+		console.log(tmpUser);
+		console.log(twoFactorAuthenticationCode);
+		return authenticator.verify({
+			token: twoFactorAuthenticationCode,
+			secret: tmpUser.two_factor_secret,
+		});
 	}
 }

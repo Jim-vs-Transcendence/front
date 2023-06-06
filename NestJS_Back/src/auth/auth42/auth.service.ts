@@ -18,11 +18,11 @@ export class AuthService {
 
 		const token = await this.tokenService.createToken(req.user.id);
 		// res.setHeader('authToken', token);
-		// res.cookie('authToken', token, {
-		// 	httpOnly: true,
-		// 	secure: true,
-		// 	sameSite: 'none',
-		// });
+		res.cookie('authToken', token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+		});
 
 		user = await this.usersService.findOne(req.user.id);
 		user.user_status = 1;
