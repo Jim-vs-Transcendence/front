@@ -23,7 +23,7 @@ import { TwoFactorService } from './auth/two-factor/two-factor.service';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: "postgres",
+      type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT, // +를 붙여 int형으로 변환
       username: process.env.DB_USERNAME,
