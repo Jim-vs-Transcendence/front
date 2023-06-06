@@ -1,5 +1,5 @@
 export class twoFactorDTO {
-	twoFactorAuthenticationCode: string;
+  twoFactorAuthenticationCode: string;
 }
 
 export default twoFactorDTO;

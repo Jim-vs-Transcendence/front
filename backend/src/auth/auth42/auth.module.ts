@@ -10,15 +10,10 @@ import { TokenService } from '../token/token.service';
 
 @Module({
   imports: [
-    PassportModule.register({defaultStrategy: '42'}),
+    PassportModule.register({ defaultStrategy: '42' }),
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    auth42Strategy,
-    UsersService,
-    TokenService,
-  ],
+  providers: [AuthService, auth42Strategy, UsersService, TokenService],
 })
 export class AuthModule {}
