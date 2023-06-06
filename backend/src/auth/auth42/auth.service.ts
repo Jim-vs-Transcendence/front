@@ -33,7 +33,7 @@ export class AuthService {
     // res.redirect('http://43.202.12.31:3002/main');
   }
 
-  async logout(token: string){
+  async logout(token: string) {
     const userId = this.tokenService.verifyToken(token);
 
     await this.tokenService.deleteToken((await userId).toString());

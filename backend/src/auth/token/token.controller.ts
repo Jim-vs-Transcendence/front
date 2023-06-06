@@ -8,9 +8,8 @@ import { Request } from 'express';
 export class TokenController {
   constructor(
     private readonly tokenService: TokenService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {}
-
 
   // token이 유효할 때는 유저 정보를 반환해주고 유효하지 않은 토큰이 넘어오면 false
 

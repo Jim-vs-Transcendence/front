@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { TwoFactorService } from './two-factor.service';
 import RequestWithUser from '../interfaces/RequestWithUser.interface';
-import twoFactorDTO from '../dto/twoFactor.dto';
+import twoFactorDTO from './two-factor.dto';
 
 @Controller('two-factor')
 export class TwoFactorController {

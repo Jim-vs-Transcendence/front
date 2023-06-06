@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth42/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './auth/auth42/auth.controller';
@@ -15,6 +13,7 @@ import { TokenService } from './auth/token/token.service';
 import { TokenController } from './auth/token/token.controller';
 import { TwoFactorController } from './auth/two-factor/two-factor.controller';
 import { TwoFactorService } from './auth/two-factor/two-factor.service';
+import { Friend } from './users/entities/friend.entity';
 
 @Module({
   imports: [
@@ -31,25 +30,18 @@ import { TwoFactorService } from './auth/two-factor/two-factor.service';
       database: process.env.DB_DATABASE,
       synchronize: process.env.DB_SYNC === 'true',
       logging: process.env.DB_LOG === 'true',
-      entities: [User]
+      entities: [User, Friend],
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Friend]),
     UsersModule,
-    TokenModule
+    TokenModule,
   ],
   controllers: [
-    AppController,
     AuthController,
     UsersController,
     TokenController,
     TwoFactorController,
   ],
-  providers: [
-    AppService,
-    AuthService,
-    UsersService,
-    TokenService,
-    TwoFactorService,
-  ],
+  providers: [AuthService, UsersService, TokenService, TwoFactorService],
 })
 export class AppModule {}
