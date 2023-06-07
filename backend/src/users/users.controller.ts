@@ -22,7 +22,7 @@ export class UsersController {
     description: '모든 유저를 조회합니다.',
   })
   @ApiCreatedResponse({
-    description: '모든 유저를 조회합니다.',
+    description: '모든 유저의 정보를 반환해줍니다.',
     type: User,
   })
   async findAll(): Promise<User[]> {
@@ -35,7 +35,8 @@ export class UsersController {
     description: '인자로 넘어온 id와 일치하는 유저를 조회합니다.',
   })
   @ApiCreatedResponse({
-    description: '인자로 넘어온 id와 일치하는 유저를 조회합니다.',
+    description:
+      '인자로 넘어온 id와 일치하는 유저의 정보(User entity)를 반환해줍니다',
     type: User,
   })
   async findOne(@Param('id') id: string): Promise<User> {
@@ -49,14 +50,13 @@ export class UsersController {
       '첫번째 인자인 id와 일치하는 유저의 데이터를 Body의 User로 업데이트 합니다.',
   })
   @ApiCreatedResponse({
-    description:
-      '첫번째 인자인 id와 일치하는 유저의 데이터를 Body의 User로 업데이트 합니다.',
-    type: String,
+    description: '성공 실패 여부를 boolean값으로 반환해줍니다.',
+    type: Boolean,
   })
   async updateUser(
     @Param('id') id: string,
     @Body() user: User,
-  ): Promise<string> {
+  ): Promise<boolean> {
     return this.usersService.updateUser(id, user);
   }
 
@@ -66,7 +66,8 @@ export class UsersController {
     description: '유저를 등록합니다.',
   })
   @ApiCreatedResponse({
-    description: '유저를 등록합니다.',
+    description:
+      '유저를 등록한 후 해당 유저의 정보(User entity)를 반환해줍니다.',
     type: User,
   })
   async saveUser(@Body() user: User): Promise<User> {
@@ -79,10 +80,10 @@ export class UsersController {
     description: '인자로 넘어온 id와 일치하는 유저를 삭제합니다.',
   })
   @ApiCreatedResponse({
-    description: '인자로 넘어온 id와 일치하는 유저를 삭제합니다.',
+    description: '성공여부를 boolean 값으로 반환해줍니다.',
     type: String,
   })
-  async deleteUser(@Param('id') id: string): Promise<string> {
+  async deleteUser(@Param('id') id: string): Promise<boolean> {
     return this.usersService.deleteUser(id);
   }
 }

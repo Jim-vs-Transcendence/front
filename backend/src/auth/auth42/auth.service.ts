@@ -28,7 +28,10 @@ export class AuthService {
 
     await this.usersService.updateUser(user.id, user);
 
-    res.redirect('http://localhost:5173/auth/' + user.id);
+    // if (user.two_factor == true)
+    //   res.redirect('http://localhost:5173/auth/two/' + user.id);
+
+    res.redirect('http://localhost:5173/auth/login/' + user.id);
     // res.redirect('http://localhost:5173/main');
     // res.redirect('http://43.202.12.31:3002/main');
   }

@@ -8,18 +8,18 @@ import { toFileStream } from 'qrcode';
 export class TwoFactorService {
   constructor(private readonly userService: UsersService) {}
 
-  async generateTwoFactorAuthenticationSecret(user: User) {
+  async generateTwoFactorAuthenticationSecret(userId: string) {
     const secret = authenticator.generateSecret();
 
     console.log(secret);
 
-    const tmpUser: User = await this.userService.findOne('dhyun');
+    const user: User = await this.userService.findOne(userId);
 
-    tmpUser.two_factor_secret = secret;
-    this.userService.updateUser('dhyun', tmpUser);
+    user.two_factor_secret = secret;
+    this.userService.updateUser(userId, user);
 
     const otpauthUrl = authenticator.keyuri(
-      'dhyun',
+      userId,
       process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
       secret,
     );
@@ -36,14 +36,24 @@ export class TwoFactorService {
 
   async isTwoFactorAuthenticationCodeValid(
     twoFactorAuthenticationCode: string,
-    user: User,
+    userId: string,
   ) {
-    const tmpUser: User = await this.userService.findOne('dhyun');
-    console.log(tmpUser);
+    const user: User = await this.userService.findOne(userId);
+    console.log(user);
     console.log(twoFactorAuthenticationCode);
     return authenticator.verify({
       token: twoFactorAuthenticationCode,
-      secret: tmpUser.two_factor_secret,
+      secret: user.two_factor_secret,
     });
   }
+
+  // async deleteSecret(userId: string) : Promise<boolean> {
+  //   const user: User = await this.userService.findOne(userId);
+
+  //   user.two_factor = false;
+  //   user.two_factor_secret = "";
+
+  //   this.userService.updateUser(userId, user);
+
+  // }
 }

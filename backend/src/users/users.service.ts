@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { Friend } from './entities/friend.entity';
+import friendDTO from './friend.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,48 +13,64 @@ export class UsersService {
   ) {}
 
   // User part
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<User> {
     return this.userRepository.findOne({ where: { id: id } });
   }
 
-  async updateUser(id: string, user: User): Promise<string> {
+  async updateUser(id: string, user: User): Promise<boolean> {
     await this.userRepository.update(id, user);
-    return 'Successfully update!';
+    return true;
   }
 
   async saveUser(user: User): Promise<User> {
     return await this.userRepository.save(user);
   }
 
-  async deleteUser(id: string): Promise<string> {
+  async deleteUser(id: string): Promise<boolean> {
     await this.userRepository.delete({ id: id });
-    return 'Successfully delete!';
+    return true;
   }
 
   // Friend part
 
-  // TODO cookie 완성되면 guard 만들어서
+  // TODO cookie 완성되면 guard 만들어서 -> 완성
+
   // 실제 그 유저가 보낸 요청이 맞는지 확인해야 함
-  requestFriend(user_from: string, user_to: string) {
+  async requestFriend(user_from: string, user_to: string) {
     // TODO
+    this.friendRepository.find({});
   }
 
-  acceptFriend(user_from: string, user_to: string) {
+  async acceptFriend(user_from: string, user_to: string) {
     // TODO
   }
 
   // 친구인 User들을 list
-  // 2번 to column 기준으로 내 id가 있는지 확인
-  listFriends(id: string) {
-    return this.friendRepository.
-    // TODO
-  }
+  // 친구 신청 시에는 from이 to에 요청을 보내므로
+  // user_to column 기준으로 내 id가 있는지 확인
+  // async listFriends(id: string): Promise<friendDTO[]> {
+  //   let ret: friendDTO;
+  //   let friends = await this.friendRepository.find({
+  //     where: {
+  //       user_to: id,
+  //     },
+  //   });
+  //   let user = await this.userRepository.find
+  //   for (const friend of friends) {
+  //     let tmp: userDTO {
+  //       id: friend.user_from,
+  //       avatar:
+  //     }
+  //     ret.push(tmp)
+  //   }
+  //   return ret;
+  // }
 
-  blockFriend(user_from: string, user_to: string) {
+  async blockFriend(user_from: string, user_to: string) {
     // TODO
   }
 }
