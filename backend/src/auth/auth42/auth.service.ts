@@ -17,21 +17,20 @@ export class AuthService {
 
     const token = await this.tokenService.createToken(req.user.id);
     // res.setHeader('authToken', token);
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    // res.cookie('authToken', token, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: 'none',
+    // });
 
     user = await this.usersService.findOne(req.user.id);
     user.user_status = 1;
 
     await this.usersService.updateUser(user.id, user);
 
-    // if (user.two_factor == true)
-    //   res.redirect('http://localhost:5173/auth/two/' + user.id);
-
-    res.redirect('http://localhost:5173/auth/login/' + user.id);
+    if (user.two_factor == true)
+      res.redirect('http://localhost:5173/auth/two/' + user.id);
+    else res.redirect('http://localhost:5173/auth/login/' + user.id);
     // res.redirect('http://localhost:5173/main');
     // res.redirect('http://43.202.12.31:3002/main');
   }

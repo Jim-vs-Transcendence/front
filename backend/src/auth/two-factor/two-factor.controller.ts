@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { TwoFactorService } from './two-factor.service';
 import RequestWithUser from '../interfaces/RequestWithUser.interface';
 import twoFactorDTO from './two-factor.dto';
@@ -19,13 +19,13 @@ export class TwoFactorController {
     description: '생성된 Google Authentication QRcode를 반환해줍니다.',
   })
   @UseGuards(TokenGuard)
-  async register(@Req() req: RequestWithUser, @Res() res: Response) {
+  async register(@Req() req: RequestWithUser): Promise<string> {
     const { otpauthUrl } =
       await this.twoFactorService.generateTwoFactorAuthenticationSecret(
         req.user.toString(),
       );
 
-    return this.twoFactorService.pipeQrCodeStream(res, otpauthUrl);
+    return await this.twoFactorService.pipeQrCodeStream(otpauthUrl);
   }
 
   @Post('authentication')
@@ -53,6 +53,9 @@ export class TwoFactorController {
   }
 
   // @Get('turn-on')
+  // async getSecret(userId: string) : Promise<boolean> {
+  //   return this.twoFactorService.deleteSecret(userId);
+  // }
 
   // @Get('turn-off')
   // async deleteSecret(userId: string) : Promise<boolean> {
