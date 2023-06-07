@@ -57,6 +57,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() user: User,
   ): Promise<boolean> {
+    console.log('Patch!');
     return this.usersService.updateUser(id, user);
   }
 
