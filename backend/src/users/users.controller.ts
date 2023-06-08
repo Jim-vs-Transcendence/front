@@ -6,12 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { TokenGuard } from 'src/auth/token/token.guard';
 
 @Controller('user')
+@UseGuards(TokenGuard)
 @ApiTags('유저 API')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

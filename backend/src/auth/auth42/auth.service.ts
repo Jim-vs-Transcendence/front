@@ -15,7 +15,6 @@ export class AuthService {
 
     if (!user) user = await this.usersService.saveUser(req.user);
 
-    const token = await this.tokenService.createToken(req.user.id);
     // res.setHeader('authToken', token);
     // res.cookie('authToken', token, {
     //   httpOnly: true,
@@ -30,9 +29,10 @@ export class AuthService {
 
     if (user.two_factor == true)
       res.redirect('http://localhost:5173/auth/two/' + user.id);
-    else res.redirect('http://localhost:5173/auth/login/' + user.id);
-    // res.redirect('http://localhost:5173/main');
-    // res.redirect('http://localhost:3002/main');
+    else {
+      const token = await this.tokenService.createToken(req.user.id);
+      res.redirect('http://localhost:5173/auth/login/' + user.id);
+    }
   }
 
   async logout(token: string) {
