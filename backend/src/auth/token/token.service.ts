@@ -7,7 +7,7 @@ export class TokenService {
 
   async createToken(userId: string): Promise<string> {
     if (await this.jwtMap.get(userId)) {
-      //중복로그인 관련 로직
+      await this.deleteToken(userId);
     }
 
     const payload = { id: userId };
