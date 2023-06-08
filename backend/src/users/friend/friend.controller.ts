@@ -1,26 +1,33 @@
-// import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-// import { FriendsService } from './friend.service';
-// import { FriendRequest } from '../entities/friendRequest.entity';
-// import { Friendship } from '../entities/friendShip.entity';
-// import { Block } from '../entities/block.entity';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { FriendsService } from './friend.service';
+import { Friend } from '../entities/friend.entity'
+import { TokenGuard } from 'src/auth/token/token.guard';
+import { SendFriendRequestDTO } from './dto/sendFriendRequest.dto';
+import friendDTO from './dto/friend.dto';
+import RequestWithUser from 'src/auth/interfaces/RequestWithUser.interface';
 
-// @Controller('friends')
-// export class FriendsController {
-//   constructor(private readonly friendsService: FriendsService) {}
+@Controller('friends')
+@UseGuards(TokenGuard)
+export class FriendsController {
+  constructor(private readonly friendsService: FriendsService) {}
 
-//   // Send a friend request
-//   @Post('requests')
-//   sendFriendRequest(@Body() dto: SendFriendRequestDto): Promise<FriendRequest> {
-//     return this.friendsService.sendFriendRequest(dto.senderId, dto.receiverId);
-//   }
+  @Get()
+  findFriend(@Req() req: RequestWithUser): Promise<friendDTO[]> {
+    return this.friendsService.findFriend(req.user);
+  }
 
-//   // Accept a friend request
-//   @Post('requests/:requestId/accept')
-//   acceptFriendRequest(
-//     @Param('requestId') requestId: string,
-//   ): Promise<Friendship> {
-//     return this.friendsService.acceptFriendRequest(requestId);
-//   }
+  // Send a friend request
+  @Post('requests')
+  sendFriendRequest(@Req() req: RequestWithUser, @Body() dto: SendFriendRequestDTO): Promise<boolean> {
+    console.log('request!');
+    return this.friendsService.sendFriendRequest(req.user, dto.user_to);
+  }
+
+  // Accept a friend request
+  @Post('requests/:user_from/accept')
+  acceptFriendRequest(@Req() req: RequestWithUser, @Param('user_from') user_from: string): Promise<boolean> {
+    return this.friendsService.acceptFriendRequest(req.user, user_from);
+  }
 
 //   // Delete a friend
 //   @Delete(':friendId')
@@ -36,4 +43,4 @@
 //   blockUser(@Body() dto: BlockUserDto): Promise<Block> {
 //     return this.friendsService.blockUser(dto.blockerId, dto.blockedId);
 //   }
-// }
+}
