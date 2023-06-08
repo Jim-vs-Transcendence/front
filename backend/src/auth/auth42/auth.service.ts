@@ -32,7 +32,7 @@ export class AuthService {
       res.redirect('http://localhost:5173/auth/two/' + user.id);
     else res.redirect('http://localhost:5173/auth/login/' + user.id);
     // res.redirect('http://localhost:5173/main');
-    // res.redirect('http://43.202.12.31:3002/main');
+    // res.redirect('http://localhost:3002/main');
   }
 
   async logout(token: string) {
