@@ -19,6 +19,7 @@ export class TokenService {
   async verifyToken(token: string): Promise<boolean | string> {
     try {
       const payload = await verify(token, process.env.JWT_SECRET);
+      if (token != this.jwtMap.get(payload['id'])) return false;
       return payload['id'];
     } catch {
       return false;
