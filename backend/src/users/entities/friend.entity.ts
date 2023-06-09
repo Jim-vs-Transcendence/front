@@ -6,6 +6,7 @@ export enum FriendRequestStatus {
   BLOCKED = 'blocked',
   PENDING = 'pending',
   ACCEPTED = 'accepted',
+  NOTHING = 'nothing',
 }
 
 @Entity('friend')
@@ -24,7 +25,8 @@ export class Friend {
     default: FriendRequestStatus.PENDING,
   })
   @ApiProperty({
-    description: '친구 상태 (blocked: block, pending: 친구신청, accepted: 친구)',
+    description:
+      '친구 상태 (blocked: block, pending: 친구신청, accepted: 친구)',
   })
   friend_status: FriendRequestStatus;
 }

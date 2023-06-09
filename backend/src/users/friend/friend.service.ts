@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Friend } from '../entities/friend.entity';
 import { FriendRequestStatus } from '../entities/friend.entity';
-import { friendDTO } from './dto/friend.dto'
+import { friendDTO } from './dto/friend.dto';
 import { UsersService } from '../users.service';
 
 @Injectable()
@@ -52,6 +52,33 @@ export class FriendsService {
     return ret;
   }
 
+  async findOneFriend(user_from: string, user_to: string): Promise<friendDTO> {
+    const friend = await this.friendRepository.findOne({
+      where: {
+        user_from: user_from,
+        user_to: user_to,
+      },
+    });
+
+    let friend_status;
+
+    if (friend) {
+      friend_status = friend.friend_status;
+    } else friend_status = FriendRequestStatus.NOTHING;
+
+    const userFrom = await this.usersService.findOne(user_to);
+
+    const ret: friendDTO = {
+      id: user_to,
+      nickname: userFrom.nickname,
+      avatar: userFrom.avatar,
+      status: userFrom.user_status,
+      friendStatus: friend_status,
+    };
+
+    return ret;
+  }
+
   // Send a friend request
   async sendFriendRequest(
     user_from: string,
@@ -86,14 +113,14 @@ export class FriendsService {
 
     // user_to accept
     request.friend_status = FriendRequestStatus.ACCEPTED;
-    const user = await this.usersRepository.findOne({ where: {id: user_to}});
+    const user = await this.usersRepository.findOne({ where: { id: user_to } });
     await this.friendRepository.save(request);
 
     // user_from create
     const friendship = this.friendRepository.create({
-        user_from: user_to,
-        user_to: user_from,
-        friend_status: FriendRequestStatus.ACCEPTED,
+      user_from: user_to,
+      user_to: user_from,
+      friend_status: FriendRequestStatus.ACCEPTED,
     });
     await this.friendRepository.save(friendship);
 
@@ -120,14 +147,14 @@ export class FriendsService {
     await this.friendRepository.delete(friendEntities[0]);
     if (friendEntities.length > 1)
       await this.friendRepository.delete(friendEntities[1]);
-  
+
     return true;
   }
 
   // Block a user
   async blockUser(user_from: string, user_to: string): Promise<boolean> {
     this.usersService.findOne(user_to);
-    
+
     const blockship = this.friendRepository.create({
       user_from: user_from,
       user_to: user_to,
@@ -137,3 +164,4 @@ export class FriendsService {
 
     return true;
   }
+}

@@ -30,6 +30,14 @@ export class FriendsController {
     return this.friendsService.findFriend(req.user);
   }
 
+  @Get(':user_to')
+  findOneFriend(
+    @Req() req: RequestWithUser,
+    @Param('user_to') user_to: string,
+  ): Promise<friendDTO> {
+    return this.friendsService.findOneFriend(req.user, user_to);
+  }
+
   // Send a friend request
   @Post('requests')
   @ApiOperation({
@@ -68,10 +76,13 @@ export class FriendsController {
   ): Promise<boolean> {
     return this.friendsService.deleteFriend(req.user, user_to);
   }
-  
+
   // Block a user
   @Post('blocks/:user_to')
-  blockUser(@Req() req: RequestWithUser, @Param('user_to') user_to: string): Promise<boolean> {
+  blockUser(
+    @Req() req: RequestWithUser,
+    @Param('user_to') user_to: string,
+  ): Promise<boolean> {
     return this.friendsService.blockUser(req.user, user_to);
   }
 }
