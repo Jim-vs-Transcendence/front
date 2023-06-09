@@ -21,35 +21,42 @@ export class FriendsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async findFriend(user_to: string) {
-  const friendEntities = await this.friendRepository.find({
-    where: { user_to: user_to },
-  });
-
   // Find a friend request
-  const ret: friendDTO[] = await Promise.all(
-    friendEntities.map(async (friend) => {
-      const userFrom = await this.usersRepository.findOne({ where: {id: friend.user_from} });
+  async findFriend(user_to: string) {
+    const friendEntities = await this.friendRepository.find({
+      where: { user_to: user_to },
+    });
 
-      if (!userFrom) {
-        throw new NotFoundException(`User with id ${friend.user_from} not found`);
-      }
+    const ret: friendDTO[] = await Promise.all(
+      friendEntities.map(async (friend) => {
+        const userFrom = await this.usersRepository.findOne({
+          where: { id: friend.user_from },
+        });
 
-      return {
-        id: friend.user_from,
-        nickname: userFrom.nickname,
-        avatar: userFrom.avatar,
-        status: userFrom.user_status,
-        friendStatus: friend.friend_status,
-      };
-    }),
-  );
+        if (!userFrom) {
+          throw new NotFoundException(
+            `User with id ${friend.user_from} not found`,
+          );
+        }
 
-  return ret;
-}
+        return {
+          id: friend.user_from,
+          nickname: userFrom.nickname,
+          avatar: userFrom.avatar,
+          status: userFrom.user_status,
+          friendStatus: friend.friend_status,
+        };
+      }),
+    );
+
+    return ret;
+  }
 
   // Send a friend request
-  async sendFriendRequest(user_from: string, user_to: string): Promise<boolean> {
+  async sendFriendRequest(
+    user_from: string,
+    user_to: string,
+  ): Promise<boolean> {
     const friendRequest = this.friendRepository.create({
       user_from,
       user_to,
@@ -59,11 +66,14 @@ export class FriendsService {
   }
 
   // Accept a friend request
-  async acceptFriendRequest(user_to: string, user_from: string): Promise<boolean> {
+  async acceptFriendRequest(
+    user_to: string,
+    user_from: string,
+  ): Promise<boolean> {
     const request = await this.friendRepository.findOne({
-      where: { 
+      where: {
         user_to: user_to,
-        user_from: user_from
+        user_from: user_from,
       },
     });
 
@@ -102,10 +112,10 @@ export class FriendsService {
     // If no entities are found, throw an error
     if (friendEntities.length < 1) {
       throw new NotFoundException(
-        `Complete friend relationship between users ${user_from} and ${user_to} not found`
+        `Complete friend relationship between users ${user_from} and ${user_to} not found`,
       );
     }
-  
+
     // If found, remove(delete) the entities from the database
     await this.friendRepository.delete(friendEntities[0]);
     if (friendEntities.length > 1)
@@ -127,4 +137,3 @@ export class FriendsService {
 
     return true;
   }
-}

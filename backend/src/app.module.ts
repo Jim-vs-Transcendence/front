@@ -45,8 +45,13 @@ import { FriendsService } from './users/friend/friend.service';
     UsersController,
     TokenController,
     TwoFactorController,
-    FriendsController,
+    FriendsController,  ],
+  providers: [
+    AuthService,
+    UsersService,
+    TokenService,
+    TwoFactorService,
+    FriendsService,
   ],
-  providers: [AuthService, UsersService, TokenService, TwoFactorService, FriendsService],
 })
 export class AppModule {}

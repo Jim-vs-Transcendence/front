@@ -14,7 +14,7 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TokenGuard } from 'src/auth/token/token.guard';
 
 @Controller('user')
-@UseGuards(TokenGuard)
+// @UseGuards(TokenGuard)
 @ApiTags('유저 API')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

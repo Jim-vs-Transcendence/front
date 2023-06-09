@@ -9,34 +9,13 @@ services:
       - "5432:5432"
     env_file:
       - .env
-    # environment:
-    #   POSTGRES_USER: root
-    #   POSTGRES_PASSWORD: password  # postgres 사용자의 암호 설정
-
     volumes:
-      - ./data/postgresql:\\wsl.localhost\Ubuntu-20.04\var\lib\postgresql/data
+      - postgresDB:/var/lib/postgresql/data
 
 volumes:
   postgresDB:
-
-# version: "3"
-
-# services:
-#   postgresql:
-#     image: postgres
-#     restart: always
-#     container_name: postgresql
-#     ports:
-#       - "5432:5432"
-#     env_file:
-#       - .env
-#     volumes:
-#       - postgresDB:/var/lib/postgresql/data
-
-# volumes:
-#   postgresDB:
-#     driver_opts:
-#       type: volume
-#       o: bind
-#       device: /home/ubuntu/user-back/data/postgresql
-#     name: postgresDB
+    driver_opts:
+      type: volume
+      o: bind
+      device: /home/ubuntu/user-back/data/postgresql
+    name: postgresDB

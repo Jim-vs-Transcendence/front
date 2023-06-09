@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { TwoFactorService } from './two-factor.service';
 import RequestWithUser from '../interfaces/RequestWithUser.interface';
 import twoFactorDTO from './two-factor.dto';
@@ -47,6 +55,17 @@ export class TwoFactorController {
     // await this.twoFactorService.twoFactorLogin(
     return await this.twoFactorService.twoFactorLogin(
       // res,
+      id,
+      twoFactorAuthenticationCode.twoFactorAuthenticationCode,
+    );
+  }
+
+  @Post('init_authentication/:id')
+  async init_authentication(
+    @Param('id') id: string,
+    @Body() twoFactorAuthenticationCode: twoFactorDTO,
+  ) {
+    return await this.twoFactorService.isTwoFactorAuthenticationCodeValid(
       id,
       twoFactorAuthenticationCode.twoFactorAuthenticationCode,
     );

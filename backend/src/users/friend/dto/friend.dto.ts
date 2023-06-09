@@ -1,4 +1,4 @@
-import { FriendRequestStatus } from "src/users/entities/friend.entity";
+import { FriendRequestStatus } from 'src/users/entities/friend.entity';
 
 export class friendDTO {
   id: string;
