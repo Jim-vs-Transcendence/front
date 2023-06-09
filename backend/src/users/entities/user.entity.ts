@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Friend } from './friend.entity';
 
 @Entity('users')
 export class User {
@@ -43,4 +44,10 @@ export class User {
 
   @Column()
   two_factor_secret: string;
+
+  // @OneToMany(() => Friend, friend => friend.user_from)
+  // sentRequests: Friend[];
+
+  // @OneToMany(() => Friend, friend => friend.user_to)
+  // receivedRequests: Friend[];
 }

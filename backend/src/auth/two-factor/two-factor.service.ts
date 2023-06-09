@@ -2,23 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { toFileStream } from 'qrcode';
+import { toDataURL } from 'qrcode';
+import { TokenService } from '../token/token.service';
+import { Response } from 'express';
 
 @Injectable()
 export class TwoFactorService {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly tokenServiece: TokenService,
+  ) {}
 
   async generateTwoFactorAuthenticationSecret(userId: string) {
     const secret = authenticator.generateSecret();
 
-    console.log(secret);
-
     const user: User = await this.userService.findOne(userId);
 
     user.two_factor_secret = secret;
-    this.userService.updateUser(userId, user);
+    await this.userService.updateUser(userId, user);
 
-    const otpauthUrl = authenticator.keyuri(
+    const otpauthUrl = await authenticator.keyuri(
       userId,
       process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
       secret,
@@ -30,8 +33,8 @@ export class TwoFactorService {
     };
   }
 
-  async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
-    return toFileStream(stream, otpauthUrl);
+  async QRtoDataURL(otpauthUrl: string): Promise<string> {
+    return await toDataURL(otpauthUrl);
   }
 
   async isTwoFactorAuthenticationCodeValid(
@@ -39,12 +42,28 @@ export class TwoFactorService {
     userId: string,
   ) {
     const user: User = await this.userService.findOne(userId);
-    console.log(user);
-    console.log(twoFactorAuthenticationCode);
     return authenticator.verify({
       token: twoFactorAuthenticationCode,
       secret: user.two_factor_secret,
     });
+  }
+
+  async twoFactorLogin(id: string, twoFactorAuthenticationCode: string) {
+    const isCodeValidated = await this.isTwoFactorAuthenticationCodeValid(
+      twoFactorAuthenticationCode,
+      id,
+    );
+
+    if (isCodeValidated == true) await this.tokenServiece.createToken(id);
+
+    return isCodeValidated;
+    // if (isCodeValidated == false) res.send('false');
+    // else {
+    //   await this.tokenServiece.createToken(id);
+    //   res.redirect('http://localhost:5173/auth/login/' + id);
+    // res.location('http://localhost:5173/auth/login/' + id);
+    // res.send('true');
+    // }
   }
 
   // async deleteSecret(userId: string) : Promise<boolean> {
