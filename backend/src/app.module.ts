@@ -45,8 +45,7 @@ import { FriendsService } from './users/friend/friend.service';
     UsersController,
     TokenController,
     TwoFactorController,
-    FriendsController,
-  ],
+    FriendsController,  ],
   providers: [
     AuthService,
     UsersService,

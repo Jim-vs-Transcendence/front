@@ -6,8 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { Friend, FriendRequestStatus } from '../entities/friend.entity';
-import friendDTO from './dto/friend.dto';
+import { Friend } from '../entities/friend.entity';
+import { FriendRequestStatus } from '../entities/friend.entity';
+import { friendDTO } from './dto/friend.dto'
+import { UsersService } from '../users.service';
 
 @Injectable()
 export class FriendsService {
@@ -16,6 +18,7 @@ export class FriendsService {
     private usersRepository: Repository<User>,
     @InjectRepository(Friend)
     private friendRepository: Repository<Friend>,
+    private readonly usersService: UsersService,
   ) {}
 
   // Find a friend request
@@ -81,14 +84,16 @@ export class FriendsService {
       throw new BadRequestException('Friend request is not pending');
     }
 
+    // user_to accept
     request.friend_status = FriendRequestStatus.ACCEPTED;
-    const user = await this.usersRepository.findOne({ where: { id: user_to } });
+    const user = await this.usersRepository.findOne({ where: {id: user_to}});
     await this.friendRepository.save(request);
 
+    // user_from create
     const friendship = this.friendRepository.create({
-      user_from: user_to,
-      user_to: user_from,
-      friend_status: FriendRequestStatus.ACCEPTED,
+        user_from: user_to,
+        user_to: user_from,
+        friend_status: FriendRequestStatus.ACCEPTED,
     });
     await this.friendRepository.save(friendship);
 
@@ -115,13 +120,20 @@ export class FriendsService {
     await this.friendRepository.delete(friendEntities[0]);
     if (friendEntities.length > 1)
       await this.friendRepository.delete(friendEntities[1]);
-
+  
     return true;
   }
 
-  // // Block a user
-  // async blockUser(blockerId: string, blockedId: string): Promise<Block> {
-  //   const block = this.blockRepository.create({ blockerId, blockedId });
-  //   return this.blockRepository.save(block);
-  // }
-}
+  // Block a user
+  async blockUser(user_from: string, user_to: string): Promise<boolean> {
+    this.usersService.findOne(user_to);
+    
+    const blockship = this.friendRepository.create({
+      user_from: user_from,
+      user_to: user_to,
+      friend_status: FriendRequestStatus.BLOCKED,
+    });
+    await this.friendRepository.save(blockship);
+
+    return true;
+  }

@@ -57,7 +57,6 @@ export class FriendsController {
     return this.friendsService.acceptFriendRequest(req.user, user_from);
   }
 
-  // Delete a friend
   @Delete(':user_to')
   @ApiOperation({
     summary: '친구 삭제 API',
@@ -69,10 +68,10 @@ export class FriendsController {
   ): Promise<boolean> {
     return this.friendsService.deleteFriend(req.user, user_to);
   }
-
-  // // Block a user
-  // @Post('blocks')
-  // blockUser(@Body() dto: BlockUserDto): Promise<Block> {
-  //   return this.friendsService.blockUser(dto.blockerId, dto.blockedId);
-  // }
+  
+  // Block a user
+  @Post('blocks/:user_to')
+  blockUser(@Req() req: RequestWithUser, @Param('user_to') user_to: string): Promise<boolean> {
+    return this.friendsService.blockUser(req.user, user_to);
+  }
 }
