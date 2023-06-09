@@ -5,6 +5,7 @@ import { TokenGuard } from 'src/auth/token/token.guard';
 import { SendFriendRequestDTO } from './dto/sendFriendRequest.dto';
 import friendDTO from './dto/friend.dto';
 import RequestWithUser from 'src/auth/interfaces/RequestWithUser.interface';
+import { User } from '../entities/user.entity';
 
 @Controller('friends')
 @UseGuards(TokenGuard)
@@ -29,18 +30,15 @@ export class FriendsController {
     return this.friendsService.acceptFriendRequest(req.user, user_from);
   }
 
-//   // Delete a friend
-//   @Delete(':friendId')
-//   deleteFriend(
-//     @User('id') userId: string,
-//     @Param('friendId') friendId: string,
-//   ): Promise<void> {
-//     return this.friendsService.deleteFriend(userId, friendId);
-//   }
+  // Delete a friend
+  @Delete(':user_from')
+  deleteFriend(@Req() req: RequestWithUser, @Param('user_to') user_to: string): Promise<boolean> {
+    return this.friendsService.deleteFriend(req.user, user_to);
+  }
 
-//   // Block a user
-//   @Post('blocks')
-//   blockUser(@Body() dto: BlockUserDto): Promise<Block> {
-//     return this.friendsService.blockUser(dto.blockerId, dto.blockedId);
-//   }
+  // Block a user
+  @Post('blocks/:user_to')
+  blockUser(@Req() req: RequestWithUser, @Param('user_to') user_to: string): Promise<boolean> {
+    return this.friendsService.blockUser(req.user, user_to);
+  }
 }

@@ -9,6 +9,7 @@ import { User } from '../entities/user.entity';
 import { Friend } from '../entities/friend.entity';
 import { FriendRequestStatus } from '../entities/friend.entity';
 import { friendDTO } from './dto/friend.dto'
+import { UsersService } from '../users.service';
 
 @Injectable()
 export class FriendsService {
@@ -17,74 +18,42 @@ export class FriendsService {
     private usersRepository: Repository<User>,
     @InjectRepository(Friend)
     private friendRepository: Repository<Friend>,
+    private readonly usersService: UsersService,
   ) {}
 
-//     async findFriend(user_to: string) {
-//     const user = await this.usersRepository.findOne({
-//         where: { id: user_to },
-//         relations: ['receivedRequests', 'receivedRequests.user_from'],
-//     });
-
-//     const ret: friendDTO[] = user.receivedRequests.map(friend => ({
-//         id: friend.user_from.id,
-//         nickname: friend.user_from.nickname,
-//         avatar: friend.user_from.avatar,
-//         status: friend.user_from.user_status,
-//         friendStatus: friend.friend_status,
-//     }));
-
-//     return ret;
-// }
   async findFriend(user_to: string) {
-//     const friends = await this.friendRepository.find({
-//         where: { user_to: user_to },
-//         relations: ['user'],  // This tells TypeORM to also retrieve related User entities
-//     });
+  const friendEntities = await this.friendRepository.find({
+    where: { user_to: user_to },
+  });
 
-//     const ret: friendDTO[] = await friends.map(friend => ({
-//         id: friend.user_to,
-//         nickname: friend.user.nickname,
-//         avatar: friend.user.avatar,
-//         status: friend.user.user_status,
-//         friendStatus: friend.friend_status,
-//     }));
+  // Find a friend request
+  const ret: friendDTO[] = await Promise.all(
+    friendEntities.map(async (friend) => {
+      const userFrom = await this.usersRepository.findOne({ where: {id: friend.user_from} });
 
-//     return ret;
-// }
-
-    let ret: friendDTO[];
-    const friends = await this.friendRepository.find({
-      where: { user_to: user_to, },
-    });
-
-
-    for (const friend of friends) {
-      const user = await this.usersRepository.findOne({where: {id: friend.user_from}})
-
-      const tmp: friendDTO = {
-        id: user.id,
-        nickname: user.nickname,
-        avatar: user.avatar,
-        status: user.user_status,
-        friendStatus: friend.friend_status,
+      if (!userFrom) {
+        throw new NotFoundException(`User with id ${friend.user_from} not found`);
       }
 
-      ret.push(tmp);
-    }
-   return ret;
-    
-    // return true;
- }
+      return {
+        id: friend.user_from,
+        nickname: userFrom.nickname,
+        avatar: userFrom.avatar,
+        status: userFrom.user_status,
+        friendStatus: friend.friend_status,
+      };
+    }),
+  );
+
+  return ret;
+}
 
   // Send a friend request
-  async sendFriendRequest(
-    user_from: string,
-    user_to: string,
-  ): Promise<boolean> {
+  async sendFriendRequest(user_from: string, user_to: string): Promise<boolean> {
     const friendRequest = this.friendRepository.create({
       user_from,
       user_to,
-      });
+    });
     this.friendRepository.save(friendRequest);
     return true;
   }
@@ -105,10 +74,12 @@ export class FriendsService {
       throw new BadRequestException('Friend request is not pending');
     }
 
+    // user_to accept
     request.friend_status = FriendRequestStatus.ACCEPTED;
     const user = await this.usersRepository.findOne({ where: {id: user_to}});
     await this.friendRepository.save(request);
 
+    // user_from create
     const friendship = this.friendRepository.create({
         user_from: user_to,
         user_to: user_from,
@@ -119,23 +90,41 @@ export class FriendsService {
     return true;
   }
 
-//   // Delete a friend
-//   async deleteFriend(userId: string, friendId: string): Promise<void> {
-//     const friendship = await this.friendshipRepository.findOne({
-//       where: [
-//         { userId1: userId, userId2: friendId },
-//         { userId1: friendId, userId2: userId },
-//       ],
-//     });
-//     if (!friendship) {
-//       throw new NotFoundException('Friendship not found');
-//     }
-//     await this.friendshipRepository.delete(friendship.id);
-//   }
+  async deleteFriend(user_from: string, user_to: string): Promise<boolean> {
+    // Fetch the friend entities from the database
+    const friendEntities = await this.friendRepository.find({
+      where: [
+        { user_from: user_to, user_to: user_from },
+        { user_from: user_from, user_to: user_to },
+      ],
+    });
 
-//   // Block a user
-//   async blockUser(blockerId: string, blockedId: string): Promise<Block> {
-//     const block = this.blockRepository.create({ blockerId, blockedId });
-//     return this.blockRepository.save(block);
-//   }
+    // If no entities are found, throw an error
+    if (friendEntities.length < 1) {
+      throw new NotFoundException(
+        `Complete friend relationship between users ${user_from} and ${user_to} not found`
+      );
+    }
+  
+    // If found, remove(delete) the entities from the database
+    await this.friendRepository.delete(friendEntities[0]);
+    if (friendEntities.length > 1)
+      await this.friendRepository.delete(friendEntities[1]);
+  
+    return true;
+  }
+
+  // Block a user
+  async blockUser(user_from: string, user_to: string): Promise<boolean> {
+    this.usersService.findOne(user_to);
+    
+    const blockship = this.friendRepository.create({
+      user_from: user_from,
+      user_to: user_to,
+      friend_status: FriendRequestStatus.BLOCKED,
+    });
+    await this.friendRepository.save(blockship);
+
+    return true;
+  }
 }

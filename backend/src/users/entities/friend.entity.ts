@@ -13,14 +13,10 @@ export class Friend {
   @PrimaryColumn()
   @ApiProperty({ description: '인트라 내부 id1' })
   user_from: string;
-  // @ManyToOne(() => User, user => user.sentRequests)
-  // user_from: string;
 
   @PrimaryColumn()
   @ApiProperty({ description: '인트라 내부 id2' })
   user_to: string;
-  // @ManyToOne(() => User, user => user.receivedRequests)
-  // user_to: string;
 
   @Column({
     type: 'enum',
