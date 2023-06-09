@@ -14,6 +14,9 @@ import { TokenController } from './auth/token/token.controller';
 import { TwoFactorController } from './auth/two-factor/two-factor.controller';
 import { TwoFactorService } from './auth/two-factor/two-factor.service';
 import { Friend } from './users/entities/friend.entity';
+import { FriendModule } from './users/friend/friend.module';
+import { FriendsController } from './users/friend/friend.controller';
+import { FriendsService } from './users/friend/friend.service';
 
 @Module({
   imports: [
@@ -35,13 +38,21 @@ import { Friend } from './users/entities/friend.entity';
     TypeOrmModule.forFeature([User, Friend]),
     UsersModule,
     TokenModule,
+    FriendModule,
   ],
   controllers: [
     AuthController,
     UsersController,
     TokenController,
     TwoFactorController,
+    FriendsController,
   ],
-  providers: [AuthService, UsersService, TokenService, TwoFactorService],
+  providers: [
+    AuthService,
+    UsersService,
+    TokenService,
+    TwoFactorService,
+    FriendsService,
+  ],
 })
 export class AppModule {}

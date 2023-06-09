@@ -26,5 +26,5 @@ export class Friend {
   @ApiProperty({
     description: '친구 상태 (0: 친구아님, 1: 친구신청, 2: 친구, 3: block)',
   })
-  friend_status: number;
+  friend_status: FriendRequestStatus;
 }

@@ -38,8 +38,8 @@ export class TwoFactorService {
   }
 
   async isTwoFactorAuthenticationCodeValid(
-    twoFactorAuthenticationCode: string,
     userId: string,
+    twoFactorAuthenticationCode: string,
   ) {
     const user: User = await this.userService.findOne(userId);
     return authenticator.verify({
@@ -50,8 +50,8 @@ export class TwoFactorService {
 
   async twoFactorLogin(id: string, twoFactorAuthenticationCode: string) {
     const isCodeValidated = await this.isTwoFactorAuthenticationCodeValid(
-      twoFactorAuthenticationCode,
       id,
+      twoFactorAuthenticationCode,
     );
 
     if (isCodeValidated == true) await this.tokenServiece.createToken(id);
